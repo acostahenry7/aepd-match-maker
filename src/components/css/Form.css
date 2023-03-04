@@ -1,0 +1,15 @@
+.form-container {
+    font-size: 18px;
+    padding: 10px 40px;
+    text-align: left;
+}
+.form-container label {
+    color: rgba(255, 255, 255, 0.5)
+}
+
+.form-control:focus {
+    border-color: inherit !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+  }
+
