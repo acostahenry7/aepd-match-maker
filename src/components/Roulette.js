@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Wheel } from "react-custom-roulette";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import WinnerModal from "./WinnerModal";
 
-export default function Roulette({ teams }) {
+export default function Roulette({ teams, teamsInfo, setCouples, couples }) {
   const colors = [
     ["3E54AC"],
     ["b7c4e1"],
@@ -24,7 +27,7 @@ export default function Roulette({ teams }) {
     ["BFDB38"],
   ];
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([{ style: { backgroundColor: "#364454" } }]);
   const [prize, setPrize] = useState(undefined);
 
   const [mustSpin, setMustSpin] = useState(false);
@@ -32,10 +35,21 @@ export default function Roulette({ teams }) {
   const [whoMustSpin, setWhoMustSpin] = useState(0);
   const [spinTimes, setSpinTimes] = useState(0);
 
+  const [modalShow, setModalShow] = useState(false);
+
+  const [teamsArr, setTeamsArr] = useState([]);
+
+  useEffect(() => {
+    (() => {
+      setTeamsArr(teams);
+    })();
+  }, [teams]);
+
   useEffect(() => {
     (() => {
       let arr = [];
-      teams[whoMustSpin]?.map((item) => {
+      console.log(teamsArr);
+      teamsArr[whoMustSpin]?.map((item) => {
         let backgroundColor = Math.floor(Math.random() * colors.length);
         arr.push({
           option: item,
@@ -47,24 +61,20 @@ export default function Roulette({ teams }) {
       });
       setData(arr);
     })();
-  }, [teams, whoMustSpin]);
+  }, [teamsArr, whoMustSpin]);
 
   const handleClick = (e) => {
-    if (whoSpined == 0 && spinTimes != 0) {
-      setWhoSpined(1);
-      setWhoMustSpin(1);
+    if (teamsArr[0].length > 0 || teamsArr[1].length > 0) {
+      let random = Math.floor(Math.random() * teams[whoMustSpin].length);
+      setPrize(random);
+
+      setSpinTimes(spinTimes + 1);
+      setMustSpin(true);
     } else {
-      setWhoSpined(0);
-      setWhoMustSpin(0);
+      let element = document.getElementById("section_6");
+      element.scrollIntoView({ behavior: "smooth" });
+      setCouples([...couples, []]);
     }
-
-    let random = Math.floor(Math.random() * teams[whoMustSpin].length);
-    setPrize(random);
-
-    console.log("RANDOM", random);
-
-    setSpinTimes(spinTimes + 1);
-    setMustSpin(true);
   };
 
   return (
@@ -78,10 +88,48 @@ export default function Roulette({ teams }) {
         // margin: 20,
       }}
     >
+      {teamsArr.length > 0 && (
+        <WinnerModal
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+          winner={teamsArr[whoSpined][prize]}
+          winnerIndex={prize}
+          winnerArr={teamsArr[whoMustSpin]}
+          setWhoSpined={setWhoSpined}
+          setWhoMustSpin={setWhoMustSpin}
+          whoSpined={whoSpined}
+          spinTimes={spinTimes}
+        />
+      )}
+
+      <div style={{ color: "black", marginBottom: 30 }}>
+        <h3>{teamsInfo[whoMustSpin].name} </h3>
+      </div>
       <Wheel
         mustStartSpinning={mustSpin}
         prizeNumber={prize}
         onStopSpinning={() => {
+          setModalShow(true);
+
+          let lastIndex = couples.length - 1;
+
+          if (couples.length > 0) {
+            if (couples[lastIndex]?.length < 2) {
+              let arr = couples;
+              arr[lastIndex].push(teamsArr[whoSpined][prize]);
+              setCouples(arr);
+              //console.log(couples);
+            } else {
+              let arr = couples;
+              arr.push([teamsArr[whoSpined][prize]]);
+              setCouples(arr);
+            }
+          } else {
+            couples.push([teamsArr[whoSpined][prize]]);
+          }
+
+          console.log("COUPLES", couples);
+
           setMustSpin(false);
         }}
         data={data}

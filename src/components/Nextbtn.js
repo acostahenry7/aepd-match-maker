@@ -3,17 +3,21 @@ import React from "react";
 export default function Nextbtn({ id, amount, team, setTeamMembers }) {
   let arr = [];
   const handleNext = (id, amount, team) => {
-    console.log("hey", team.name);
-    for (let i = 0; i < amount.length; i++) {
+    for (let i = 0; i < amount?.length; i++) {
       arr.push(
-        document.getElementById(`${team?.name.split(" ").join("_")}_${i}`).value
+        document.getElementById(`${team?.name?.split(" ").join("_")}_${i}`)
+          .value
       );
     }
 
-    setTeamMembers(arr);
+    setTeamMembers && setTeamMembers(arr);
 
     let element = document.getElementById(id.toString());
     element.scrollIntoView({ behavior: "smooth" });
+
+    if (team?.name == "sum") {
+      window.location.reload();
+    }
   };
 
   return (

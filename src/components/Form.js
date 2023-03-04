@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import "./css/Form.css";
 
-export default function Form({ setTeam, next, time }) {
+export default function Form({ setTeam, next, time, autoFocus }) {
   const [amount, setAmount] = useState(0);
 
   const [info, setInfo] = useState({ name: "", noOfMembers: "" });
@@ -36,6 +36,7 @@ export default function Form({ setTeam, next, time }) {
             </label>
             <input
               className="form-control mt-5"
+              autoFocus={autoFocus}
               type="text"
               style={{
                 backgroundColor: "transparent",

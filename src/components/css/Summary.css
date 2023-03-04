@@ -1,0 +1,12 @@
+.summary-list {
+  display: flex;
+  width: 100%;
+  text-align: center;
+}
+
+.summary-list span {
+  display: block;
+  width: 200px;
+  padding: 0 30px;
+  border: 1px solid #fff;
+}

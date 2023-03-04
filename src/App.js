@@ -29,6 +29,8 @@ function App() {
   const [team1, setTeam1] = useState({});
   const [team2, setTeam2] = useState({});
 
+  const [couples, setCouples] = useState([]);
+
   const [teamMembers1, setTeamMembers1] = useState([]);
   const [teamMembers2, setTeamMembers2] = useState([]);
 
@@ -53,7 +55,7 @@ function App() {
           <h4> Asociación Evangelística el Plan de Dios</h4>
         </div>
         <div className="roulette-container">
-          <Form setTeam={setTeam1} next="section_2" time={1} />
+          <Form setTeam={setTeam1} next="section_2" time={1} autoFocus={true} />
         </div>
       </div>
       <div className="App-bg" id="section_2">
@@ -82,12 +84,17 @@ function App() {
       </div>
       <div className="App-bg" id="section_5">
         <div className="roulette-container">
-          <Roulette teams={[teamMembers1, teamMembers2]} />
+          <Roulette
+            teams={[teamMembers1, teamMembers2]}
+            teamsInfo={[team1, team2]}
+            setCouples={setCouples}
+            couples={couples}
+          />
         </div>
       </div>
       <div className="App-bg" id="section_6">
         <div className="roulette-container">
-          <Summary />
+          <Summary couples={couples} />
         </div>
       </div>
     </div>
